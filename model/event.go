@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -34,7 +35,7 @@ func (event *Event) Validate() (string, bool) {
 }
 
 /*SaveEvent struct*/
-func SaveEvent(event Event) (string, *Event) {
+func SaveEvent(event Event, db *gorm.DB) (string, *Event) {
 
 	if error, ok := event.Validate(); !ok {
 		return error, nil
@@ -45,7 +46,7 @@ func SaveEvent(event Event) (string, *Event) {
 		} else {
 			event.UUID = uuid
 		}
-		inserterr := GetDB().Create(&event).Error
+		inserterr := db.Create(&event).Error
 		if inserterr != nil {
 			return fmt.Sprintf("Event cannot be saved %s", inserterr), nil
 		} else {
@@ -55,10 +56,10 @@ func SaveEvent(event Event) (string, *Event) {
 }
 
 /*GetEventByID uint*/
-func GetEventByID(id uuid.UUID) (string, *Event) {
+func GetEventByID(id uuid.UUID, db *gorm.DB) (string, *Event) {
 
 	event := Event{}
-	err := GetDB().Where("uuid = ?", id).First(&event).Error
+	err := db.Where("uuid = ?", id).First(&event).Error
 	if err != nil {
 		return fmt.Sprintf("No event found with id %d", id), nil
 	}
@@ -66,10 +67,10 @@ func GetEventByID(id uuid.UUID) (string, *Event) {
 }
 
 /*GetAllEvents array*/
-func GetAllEvents() (string, []*Event) {
+func GetAllEvents(db *gorm.DB) (string, []*Event) {
 
 	events := make([]*Event, 0)
-	err := GetDB().Find(&events).Error
+	err := db.Find(&events).Error
 	if err != nil {
 		return "", nil
 	}
