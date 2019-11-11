@@ -14,11 +14,7 @@ Golang Rest service with Postgresql backend
 - "github.com/joho/godotenv"
 
 # build
-go get github.com/gorilla/mux
-go get github.com/jinzhu/gorm
-go get github.com/jinzhu/gorm/dialects/postgres
-go get github.com/satori/go.uuid
-go get github.com/joho/godotenv
+go get -d -v
 go clean
 go build
 
