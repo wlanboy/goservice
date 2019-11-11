@@ -1,5 +1,5 @@
 # goservice
-Golang Rest service with Postgresql backend
+Golang Rest service with Postgresql backend and Spring Cloud Config Server support
 
 # using
 - "os"
@@ -11,7 +11,6 @@ Golang Rest service with Postgresql backend
 - "github.com/jinzhu/gorm"
 - "github.com/jinzhu/gorm/dialects/postgres"
 - "github.com/satori/go.uuid"
-- "github.com/joho/godotenv"
 
 # build
 go get -d -v
