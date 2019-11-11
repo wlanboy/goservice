@@ -23,7 +23,7 @@ go build
 # run
 go run main.go
 
-# dockerize
+# dockerize (dokcer image size is 9.89MB)
 GOOS=linux GOARCH=386 go build
 docker build -t goservice .
 
