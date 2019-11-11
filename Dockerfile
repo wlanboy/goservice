@@ -1,8 +1,6 @@
-FROM golang:1.13.4
+FROM busybox:latest
 
-WORKDIR /app
-COPY .env .env
-COPY goservice goservice
+COPY ./goservice /home/
 EXPOSE 8000
 
-CMD ["./goservice"]
+CMD ["/home/goservice"]
