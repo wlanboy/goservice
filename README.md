@@ -27,7 +27,7 @@ go run main.go
 go get -u github.com/go-delve/delve/cmd/dlv
 dlv debug ./goservice
 
-# dockerize (dokcer image size is 9.89MB)
+# dockerize (docker image size is 9.89MB)
 GOOS=linux GOARCH=386 go build
 docker build -t goservice .
 
