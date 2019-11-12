@@ -43,7 +43,7 @@ func LoadCloudConfig() {
 
 	req, errhttp := http.NewRequest("GET", url, nil)
 	if errhttp != nil {
-		log.Fatal("Cloud Config http request error")
+		log.Println("Cloud Config http request error")
 		log.Fatal(errhttp)
 	} else {
 		req.Header.Add("Accept", "application/json")
@@ -51,7 +51,7 @@ func LoadCloudConfig() {
 		resp, errhttpclient := client.Do(req)
 
 		if errhttpclient != nil {
-			log.Fatal("Cloud Config http client error")
+			log.Println("Cloud Config http client error")
 			log.Fatal(errhttpclient)
 		} else {
 			defer resp.Body.Close()
@@ -66,7 +66,7 @@ func LoadCloudConfig() {
 
 			body, errio := ioutil.ReadAll(resp.Body)
 			if errio != nil {
-				log.Fatal("Cloud Config read error")
+				log.Println("Cloud Config read error")
 				log.Fatal(errio)
 			} else {
 				//stringproperties := string(body)
@@ -78,7 +78,6 @@ func LoadCloudConfig() {
 				if errjson != nil {
 					fmt.Println(errjson)
 					log.Fatal("Cloud Config json unmarshal error")
-					os.Exit(1)
 				} else {
 					os.Setenv("db_user", cloudconfig.PropertySources[0].Source.DbUser)
 					os.Setenv("db_pass", cloudconfig.PropertySources[0].Source.DbPass)

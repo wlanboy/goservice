@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,7 +15,6 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	uuid "github.com/satori/go.uuid"
 )
 
 /*GoService containing router and database*/
@@ -26,55 +24,7 @@ type GoService struct {
 	Server *http.Server
 }
 
-/*PostCreate POST method*/
-func (application *GoService) PostCreate(w http.ResponseWriter, r *http.Request) {
-
-	event := model.Event{}
-
-	err := json.NewDecoder(r.Body).Decode(&event)
-	if err != nil {
-		WriteJSONErrorResponse(w, "Cannot parse JSON", http.StatusBadRequest)
-	} else {
-		err, resp := model.SaveEvent(event, application.DB)
-		if err != "" {
-			WriteJSONErrorResponse(w, err, http.StatusInternalServerError)
-		} else {
-			WriteJSONResponse(w, resp, http.StatusCreated)
-		}
-	}
-}
-
-/*GetByID GET method*/
-func (application *GoService) GetByID(w http.ResponseWriter, r *http.Request) {
-
-	vars := mux.Vars(r)
-	id := vars["id"]
-	uuid, uuiderr := uuid.FromString(id)
-
-	if uuiderr != nil {
-		WriteJSONErrorResponse(w, "Cannot parse UUID", http.StatusBadRequest)
-	} else {
-		err, resp := model.GetEventByID(uuid, application.DB)
-		if err != "" {
-			WriteJSONErrorResponse(w, err, http.StatusNotFound)
-		} else {
-			WriteJSONResponse(w, resp, http.StatusOK)
-		}
-	}
-}
-
-/*GetAll GET method*/
-func (application *GoService) GetAll(w http.ResponseWriter, r *http.Request) {
-
-	err, resp := model.GetAllEvents(application.DB)
-	if err != "" {
-		WriteJSONErrorResponse(w, err, http.StatusNotFound)
-	} else {
-		WriteJSONArrayResponse(w, resp, http.StatusOK)
-	}
-}
-
-/*Initialize app*/
+/*Initialize app router and configuration*/
 func (application *GoService) Initialize() {
 	application.Router = mux.NewRouter()
 
@@ -86,7 +36,7 @@ func (application *GoService) Initialize() {
 	configuration.LoadCloudConfig()
 }
 
-/*Run app*/
+/*Run app and initialize db connection and http server*/
 func (application *GoService) Run() {
 	//load db connection
 	username := os.Getenv("db_user")
@@ -102,7 +52,6 @@ func (application *GoService) Run() {
 	if err != nil {
 		fmt.Print(err)
 	}
-	defer conn.Close()
 
 	application.DB = conn
 	application.DB.Debug().AutoMigrate(&model.Event{})
@@ -122,7 +71,7 @@ func (application *GoService) Run() {
 	}
 
 	go func() {
-		log.Println("Starting Server")
+		log.Println("Starting http server...")
 		if err := application.Server.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}
@@ -140,8 +89,9 @@ func (application *GoService) WaitForShutdown() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
+	defer application.DB.Close()
 	application.Server.Shutdown(ctx)
 
-	log.Println("Shutting down")
+	log.Println("Shutting down http server.")
 	os.Exit(0)
 }
