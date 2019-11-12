@@ -8,6 +8,7 @@ Golang Rest service with Postgresql backend and Spring Cloud Config Server suppo
 - "net/http"
 - "encoding/json"
 - "github.com/gorilla/mux"
+- "github.com/gorilla/handlers"
 - "github.com/jinzhu/gorm"
 - "github.com/jinzhu/gorm/dialects/postgres"
 - "github.com/satori/go.uuid"

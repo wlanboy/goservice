@@ -32,7 +32,8 @@ func (goservice *GoService) Initialize() {
 	goservice.Router.HandleFunc("/api/v1/event", goservice.GetAll).Methods("GET")
 	goservice.Router.HandleFunc("/api/v1/event/{id}", goservice.GetByID).Methods("GET")
 
-	//load env from cloud conig server
+	goservice.Router.Use(loggingMiddleware)
+
 	configuration.LoadCloudConfig()
 }
 
