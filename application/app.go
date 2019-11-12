@@ -102,6 +102,7 @@ func (application *GoService) Run() {
 	if err != nil {
 		fmt.Print(err)
 	}
+	defer conn.Close()
 
 	application.DB = conn
 	application.DB.Debug().AutoMigrate(&model.Event{})
