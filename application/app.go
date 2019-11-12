@@ -25,19 +25,19 @@ type GoService struct {
 }
 
 /*Initialize app router and configuration*/
-func (application *GoService) Initialize() {
-	application.Router = mux.NewRouter()
+func (goservice *GoService) Initialize() {
+	goservice.Router = mux.NewRouter()
 
-	application.Router.HandleFunc("/api/v1/event", application.PostCreate).Methods("POST")
-	application.Router.HandleFunc("/api/v1/event", application.GetAll).Methods("GET")
-	application.Router.HandleFunc("/api/v1/event/{id}", application.GetByID).Methods("GET")
+	goservice.Router.HandleFunc("/api/v1/event", goservice.PostCreate).Methods("POST")
+	goservice.Router.HandleFunc("/api/v1/event", goservice.GetAll).Methods("GET")
+	goservice.Router.HandleFunc("/api/v1/event/{id}", goservice.GetByID).Methods("GET")
 
 	//load env from cloud conig server
 	configuration.LoadCloudConfig()
 }
 
 /*Run app and initialize db connection and http server*/
-func (application *GoService) Run() {
+func (goservice *GoService) Run() {
 	//load db connection
 	username := os.Getenv("db_user")
 	password := os.Getenv("db_pass")
@@ -53,8 +53,8 @@ func (application *GoService) Run() {
 		fmt.Print(err)
 	}
 
-	application.DB = conn
-	application.DB.Debug().AutoMigrate(&model.Event{})
+	goservice.DB = conn
+	goservice.DB.Debug().AutoMigrate(&model.Event{})
 
 	//load http server
 	port := os.Getenv("PORT")
@@ -63,8 +63,8 @@ func (application *GoService) Run() {
 	}
 	fmt.Println(port)
 
-	application.Server = &http.Server{
-		Handler:      application.Router,
+	goservice.Server = &http.Server{
+		Handler:      goservice.Router,
 		Addr:         fmt.Sprintf(":%s", port),
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -72,7 +72,7 @@ func (application *GoService) Run() {
 
 	go func() {
 		log.Println("Starting http server...")
-		if err := application.Server.ListenAndServe(); err != nil {
+		if err := goservice.Server.ListenAndServe(); err != nil {
 			log.Fatal(err)
 		}
 	}()
@@ -80,7 +80,7 @@ func (application *GoService) Run() {
 }
 
 /*WaitForShutdown application server*/
-func (application *GoService) WaitForShutdown() {
+func (goservice *GoService) WaitForShutdown() {
 	interruptChan := make(chan os.Signal, 1)
 	signal.Notify(interruptChan, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
@@ -89,8 +89,8 @@ func (application *GoService) WaitForShutdown() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
-	defer application.DB.Close()
-	application.Server.Shutdown(ctx)
+	defer goservice.DB.Close()
+	goservice.Server.Shutdown(ctx)
 
 	log.Println("Shutting down http server.")
 	os.Exit(0)

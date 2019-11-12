@@ -11,7 +11,7 @@ import (
 )
 
 /*PostCreate POST method*/
-func (application *GoService) PostCreate(w http.ResponseWriter, r *http.Request) {
+func (goservice *GoService) PostCreate(w http.ResponseWriter, r *http.Request) {
 
 	event := model.Event{}
 
@@ -21,7 +21,7 @@ func (application *GoService) PostCreate(w http.ResponseWriter, r *http.Request)
 		log.Println(err)
 		WriteJSONErrorResponse(w, "Cannot parse JSON", http.StatusBadRequest)
 	} else {
-		errdb, resp := model.SaveEvent(event, application.DB)
+		errdb, resp := model.SaveEvent(event, goservice.DB)
 		if errdb != "" {
 			log.Println("Model error")
 			log.Println(errdb)
@@ -33,7 +33,7 @@ func (application *GoService) PostCreate(w http.ResponseWriter, r *http.Request)
 }
 
 /*GetByID GET method*/
-func (application *GoService) GetByID(w http.ResponseWriter, r *http.Request) {
+func (goservice *GoService) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -42,7 +42,7 @@ func (application *GoService) GetByID(w http.ResponseWriter, r *http.Request) {
 	if uuiderr != nil {
 		WriteJSONErrorResponse(w, "Cannot parse UUID", http.StatusBadRequest)
 	} else {
-		errdb, resp := model.GetEventByID(uuid, application.DB)
+		errdb, resp := model.GetEventByID(uuid, goservice.DB)
 		if errdb != "" {
 			log.Println("Model error")
 			log.Println(errdb)
@@ -54,9 +54,9 @@ func (application *GoService) GetByID(w http.ResponseWriter, r *http.Request) {
 }
 
 /*GetAll GET method*/
-func (application *GoService) GetAll(w http.ResponseWriter, r *http.Request) {
+func (goservice *GoService) GetAll(w http.ResponseWriter, r *http.Request) {
 
-	errdb, resp := model.GetAllEvents(application.DB)
+	errdb, resp := model.GetAllEvents(goservice.DB)
 	if errdb != "" {
 		log.Println("Model error")
 		log.Println(errdb)
