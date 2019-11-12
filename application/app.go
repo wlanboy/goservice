@@ -28,6 +28,8 @@ type GoService struct {
 func (goservice *GoService) Initialize() {
 	goservice.Router = mux.NewRouter()
 
+	goservice.Router.HandleFunc("/health", goservice.healthCheckHandler)
+
 	goservice.Router.HandleFunc("/api/v1/event", goservice.PostCreate).Methods("POST")
 	goservice.Router.HandleFunc("/api/v1/event", goservice.GetAll).Methods("GET")
 	goservice.Router.HandleFunc("/api/v1/event/{id}", goservice.GetByID).Methods("GET")
