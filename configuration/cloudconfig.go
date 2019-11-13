@@ -54,39 +54,43 @@ func LoadCloudConfig() {
 			log.Println("Cloud Config http client error")
 			log.Fatal(errhttpclient)
 		} else {
-			defer resp.Body.Close()
-
-			if resp.StatusCode == 404 {
-				log.Fatal("Cloud Config not found")
-			}
-
-			if resp.StatusCode != 200 {
-				log.Fatal("Cloud Config http error")
-			}
-
-			body, errio := ioutil.ReadAll(resp.Body)
-			if errio != nil {
-				log.Println("Cloud Config read error")
-				log.Fatal(errio)
-			} else {
-				//stringproperties := string(body)
-				//fmt.Println(stringproperties)
-
-				var cloudconfig CloudConfig
-				errjson := json.Unmarshal(body, &cloudconfig)
-
-				if errjson != nil {
-					fmt.Println(errjson)
-					log.Fatal("Cloud Config json unmarshal error")
-				} else {
-					os.Setenv("db_user", cloudconfig.PropertySources[0].Source.DbUser)
-					os.Setenv("db_pass", cloudconfig.PropertySources[0].Source.DbPass)
-					os.Setenv("db_name", cloudconfig.PropertySources[0].Source.DbName)
-					os.Setenv("db_host", cloudconfig.PropertySources[0].Source.DbHost)
-					os.Setenv("db_port", cloudconfig.PropertySources[0].Source.DbPort)
-					os.Setenv("db_type", cloudconfig.PropertySources[0].Source.DbType)
-				}
-			}
+			readAndCheckHTTPResponse(resp)
 		}
+	}
+}
+
+func readAndCheckHTTPResponse(resp *http.Response) {
+	if resp.StatusCode == 404 {
+		log.Fatal("Cloud Config not found")
+	}
+
+	if resp.StatusCode != 200 {
+		log.Fatal("Cloud Config http error")
+	}
+	defer resp.Body.Close()
+
+	body, errio := ioutil.ReadAll(resp.Body)
+	if errio != nil {
+		log.Println("Cloud Config read error")
+		log.Fatal(errio)
+	} else {
+		parseAndSetConfigValues(body)
+	}
+}
+
+func parseAndSetConfigValues(body []byte) {
+	var cloudconfig CloudConfig
+	errjson := json.Unmarshal(body, &cloudconfig)
+
+	if errjson != nil {
+		fmt.Println(errjson)
+		log.Fatal("Cloud Config json unmarshal error")
+	} else {
+		os.Setenv("db_user", cloudconfig.PropertySources[0].Source.DbUser)
+		os.Setenv("db_pass", cloudconfig.PropertySources[0].Source.DbPass)
+		os.Setenv("db_name", cloudconfig.PropertySources[0].Source.DbName)
+		os.Setenv("db_host", cloudconfig.PropertySources[0].Source.DbHost)
+		os.Setenv("db_port", cloudconfig.PropertySources[0].Source.DbPort)
+		os.Setenv("db_type", cloudconfig.PropertySources[0].Source.DbType)
 	}
 }
