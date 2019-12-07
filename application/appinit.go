@@ -3,7 +3,6 @@ package application
 import (
 	configuration "../configuration"
 	"github.com/gorilla/mux"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 /*Initialize app router and configuration*/
@@ -18,6 +17,11 @@ func (goservice *GoService) Initialize() {
 
 	goservice.Router.Use(loggingMiddleware)
 
+	var appconfig ConfigParameters = handleConfiguration()
+	goservice.Config = &appconfig
+}
+
+func handleConfiguration() ConfigParameters {
 	var cloudconfig configuration.CloudConfig
 	cloudconfig = configuration.LoadCloudConfig()
 
@@ -29,6 +33,5 @@ func (goservice *GoService) Initialize() {
 	appconfig.DbHost = cloudconfig.PropertySources[0].Source.DbHost
 	appconfig.DbPort = cloudconfig.PropertySources[0].Source.DbPort
 	appconfig.DbType = cloudconfig.PropertySources[0].Source.DbType
-
-	goservice.Config = &appconfig
+	return appconfig
 }
