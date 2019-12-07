@@ -1,14 +1,5 @@
 package configuration
 
-import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"os"
-)
-
 /*CloudConfig struct*/
 type CloudConfig struct {
 	Name            string            `json:"name"`
@@ -29,68 +20,4 @@ type Source struct {
 	DbType string `json:"db_type"`
 	DbHost string `json:"db_host"`
 	DbPort string `json:"db_port"`
-}
-
-/*LoadCloudConfig from http://cloudconfig:8888/goservice/default*/
-func LoadCloudConfig() {
-
-	url := os.Getenv("cloudconfig")
-	if url == "" {
-		url = "http://nuc:8888/goservice/default"
-	}
-
-	client := &http.Client{}
-
-	req, errhttp := http.NewRequest("GET", url, nil)
-	if errhttp != nil {
-		log.Println("Cloud Config http request error")
-		log.Fatal(errhttp)
-	} else {
-		req.Header.Add("Accept", "application/json")
-
-		resp, errhttpclient := client.Do(req)
-
-		if errhttpclient != nil {
-			log.Println("Cloud Config http client error")
-			log.Fatal(errhttpclient)
-		} else {
-			readAndCheckHTTPResponse(resp)
-		}
-	}
-}
-
-func readAndCheckHTTPResponse(resp *http.Response) {
-	if resp.StatusCode == 404 {
-		log.Fatal("Cloud Config not found")
-	}
-
-	if resp.StatusCode != 200 {
-		log.Fatal("Cloud Config http error")
-	}
-	defer resp.Body.Close()
-
-	body, errio := ioutil.ReadAll(resp.Body)
-	if errio != nil {
-		log.Println("Cloud Config read error")
-		log.Fatal(errio)
-	} else {
-		parseAndSetConfigValues(body)
-	}
-}
-
-func parseAndSetConfigValues(body []byte) {
-	var cloudconfig CloudConfig
-	errjson := json.Unmarshal(body, &cloudconfig)
-
-	if errjson != nil {
-		fmt.Println(errjson)
-		log.Fatal("Cloud Config json unmarshal error")
-	} else {
-		os.Setenv("db_user", cloudconfig.PropertySources[0].Source.DbUser)
-		os.Setenv("db_pass", cloudconfig.PropertySources[0].Source.DbPass)
-		os.Setenv("db_name", cloudconfig.PropertySources[0].Source.DbName)
-		os.Setenv("db_host", cloudconfig.PropertySources[0].Source.DbHost)
-		os.Setenv("db_port", cloudconfig.PropertySources[0].Source.DbPort)
-		os.Setenv("db_type", cloudconfig.PropertySources[0].Source.DbType)
-	}
 }
