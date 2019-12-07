@@ -10,44 +10,39 @@ import (
 	"syscall"
 	"time"
 
-	configuration "../configuration"
 	model "../model"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
+/*ConfigParameters for App*/
+type ConfigParameters struct {
+	DbName string
+	DbUser string
+	DbPass string
+	DbType string
+	DbHost string
+	DbPort string
+}
+
 /*GoService containing router and database*/
 type GoService struct {
 	Router *mux.Router
 	DB     *gorm.DB
 	Server *http.Server
-}
-
-/*Initialize app router and configuration*/
-func (goservice *GoService) Initialize() {
-	goservice.Router = mux.NewRouter()
-
-	goservice.Router.HandleFunc("/health", goservice.healthCheckHandler)
-
-	goservice.Router.HandleFunc("/api/v1/event", goservice.PostCreate).Methods("POST")
-	goservice.Router.HandleFunc("/api/v1/event", goservice.GetAll).Methods("GET")
-	goservice.Router.HandleFunc("/api/v1/event/{id}", goservice.GetByID).Methods("GET")
-
-	goservice.Router.Use(loggingMiddleware)
-
-	configuration.LoadCloudConfig()
+	Config *ConfigParameters
 }
 
 /*Run app and initialize db connection and http server*/
 func (goservice *GoService) Run() {
 	//load db connection
-	username := os.Getenv("db_user")
-	password := os.Getenv("db_pass")
-	dbName := os.Getenv("db_name")
-	dbHost := os.Getenv("db_host")
-	dbPort := os.Getenv("db_port")
-	dbType := os.Getenv("db_type")
+	username := goservice.Config.DbUser
+	password := goservice.Config.DbPass
+	dbName := goservice.Config.DbName
+	dbHost := goservice.Config.DbHost
+	dbPort := goservice.Config.DbPort
+	dbType := goservice.Config.DbType
 
 	dbURI := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbPort, username, dbName, password)
 	//fmt.Println(dbURI)
