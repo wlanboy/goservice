@@ -2,10 +2,15 @@
 Golang Rest service with Postgresql backend and Spring Cloud Config Server support
 
 # using
+- "context"
 - "os"
+- "os/signal"
+- "syscall"
 - "fmt"
 - "time"
 - "net/http"
+- "net/http/httputil"
+- "log"
 - "encoding/json"
 - "github.com/gorilla/mux"
 - "github.com/gorilla/handlers"
