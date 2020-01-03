@@ -34,6 +34,7 @@ dlv debug ./goservice
 
 # dockerize (docker image size is 9.89MB)
 GOOS=linux GOARCH=386 go build
+
 docker build -t goservice .
 
 # run docker container
