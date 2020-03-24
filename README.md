@@ -1,5 +1,5 @@
 # goservice
-Golang Rest service with Postgresql backend and Spring Cloud Config Server support
+Golang Rest service based on gorilla, gorm using Spring cloud config and PostgreSql
 
 # using
 - "context"
