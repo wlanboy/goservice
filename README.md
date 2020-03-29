@@ -1,3 +1,5 @@
+![Go](https://github.com/wlanboy/goservice/workflows/Go/badge.svg?branch=master)
+
 # goservice
 Golang Rest service based on gorilla, gorm using Spring cloud config and PostgreSql
 
