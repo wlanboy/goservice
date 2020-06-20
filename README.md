@@ -41,6 +41,13 @@ Golang Rest service based on gorilla, gorm using Spring cloud config and Postgre
 * GOOS=linux GOARCH=arm64 go build (Odroid C2 build)
 * docker build -t goservice .
 
+## Docker publish to github registry
+- docker tag goservice:latest docker.pkg.github.com/wlanboy/goservice/goservice:latest
+- docker push docker.pkg.github.com/wlanboy/goservice/goservice:latest
+
+## Docker Registry repro
+- https://github.com/wlanboy/goservice/packages/278503
+
 # run docker container
 *docker run -d -p 8000:8000 goservice
 
