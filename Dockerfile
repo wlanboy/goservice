@@ -1,8 +1,18 @@
-FROM busybox:1.31
+FROM golang:1.15-alpine3.12 as builder
+RUN apk add --no-cache git
+RUN apk add --no-cache sqlite-libs sqlite-dev
+RUN apk add --no-cache build-base
+RUN mkdir /app
+ADD . /app
+WORKDIR /app
+RUN go get -d -v
+RUN go build -v -o main .
 
-COPY ./goservice /home/
-COPY ./.env /home/
+FROM alpine:3.12
+RUN apk --no-cache add ca-certificates
+WORKDIR /root/
+COPY --from=builder /app/main .
+COPY --from=builder /app/.env .
 EXPOSE 8000
 
-WORKDIR /home
-CMD ["/home/goservice"]
+CMD ["/main"]
