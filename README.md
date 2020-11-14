@@ -18,7 +18,10 @@ Golang Rest service based on gorilla, gorm using Spring cloud config and Postgre
 - "github.com/gorilla/handlers"
 - "github.com/jinzhu/gorm"
 - "github.com/jinzhu/gorm/dialects/postgres"
+- "github.com/jinzhu/gorm/dialects/sqlite"
 - "github.com/satori/go.uuid"
+- "github.com/joho/godotenv"
+- "github.com/prometheus/client_golang/prometheus/promhttp"
 
 # build
 * go get -d -v
