@@ -1,0 +1,23 @@
+name: Docker build and publish image
+on: 
+  push:
+    tags: 
+      - '*d'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: wlanboy/goservice
+        dockerfile: Dockerfile
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        tags: "latest"
