@@ -24,7 +24,7 @@ jobs:
             dep ensure
         fi
     - name: Build
-      run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -v .
+      run: CGO_ENABLED=1 GOOS=linux go build -v .
       
     - name: Build and publish Docker Image to GitHub Packages Registry
       uses: VaultVulp/gp-docker-action@1.1.7
