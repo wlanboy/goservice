@@ -22,4 +22,4 @@ jobs:
             docker pull docker.pkg.github.com/wlanboy/goservice/goservice:latest
             docker stop goservice
             docker rm goservice
-            docker run --name goservice -d -p 8000:7000 docker.pkg.github.com/wlanboy/goservice/goservice:latest
+            docker run --name goservice -d -p 8000:8000 docker.pkg.github.com/wlanboy/goservice/goservice:latest
