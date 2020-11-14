@@ -1,0 +1,25 @@
+on:
+  workflow_dispatch:
+    inputs:
+      location:
+        description: 'location'
+        required: false
+        default: 'azure'
+    
+jobs:
+  my-job:
+    name: Deploy gosimplehttpserver
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh docker deploy
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.SSHHOST }}
+          username: ${{ secrets.SSHUSERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.SSHPORT }}
+          script: |
+            docker pull docker.pkg.github.com/wlanboy/goservice/goservice:latest
+            docker stop goservice
+            docker rm goservice
+            docker run --name goservice -d -p 7000:7000 docker.pkg.github.com/wlanboy/goservice/goservice:latest
