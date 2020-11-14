@@ -25,6 +25,10 @@ Golang Rest service based on gorilla, gorm using Spring cloud config and Postgre
 * go clean
 * go build
 
+# build windows
+* install https://jmeubank.github.io/tdm-gcc/
+* go get github.com/mattn/go-sqlite3 in windows shell
+
 # depends on
 * PostgreSQL instance: https://github.com/wlanboy/Dockerfiles/tree/master/Postgres
 
