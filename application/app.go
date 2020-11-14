@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
 /*ConfigParameters for App*/
@@ -44,9 +45,16 @@ func (goservice *GoService) Run() {
 	dbPort := goservice.Config.DbPort
 	dbType := goservice.Config.DbType
 
-	dbURI := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbPort, username, dbName, password)
+	var conn *gorm.DB
+	var err error
+
+	if dbType == "sqlite3" {
+		conn, err = gorm.Open(dbType, dbName)
+	} else {
+		dbURI := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbPort, username, dbName, password)
+		conn, err = gorm.Open(dbType, dbURI)
+	}
 	//fmt.Println(dbURI)
-	conn, err := gorm.Open(dbType, dbURI)
 	if err != nil {
 		fmt.Print(err)
 	}
