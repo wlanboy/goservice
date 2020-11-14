@@ -55,6 +55,10 @@ Golang Rest service based on gorilla, gorm using Spring cloud config and Postgre
 # run docker container
 *docker run -d -p 8000:8000 goservice
 
-# call
+# create event
 * curl -X POST http://127.0.0.1:8000/api/v1/event -H 'Content-Type: application/json' -d '{"name": "test", "type": "info"}'
+# get all events
 * curl -X GET http://127.0.0.1:8000/api/v1/event 
+# get prometheus metrics
+* curl -X GET http://127.0.0.1:8000/metrics
+ 

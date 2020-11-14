@@ -7,6 +7,7 @@ import (
 	configuration "../configuration"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 /*Initialize app router and configuration*/
@@ -14,6 +15,7 @@ func (goservice *GoService) Initialize() {
 	goservice.Router = mux.NewRouter()
 
 	goservice.Router.HandleFunc("/health", goservice.healthCheckHandler)
+	goservice.Router.Handle("/metrics", promhttp.Handler())
 
 	goservice.Router.HandleFunc("/api/v1/event", goservice.PostCreate).Methods("POST")
 	goservice.Router.HandleFunc("/api/v1/event", goservice.GetAll).Methods("GET")
