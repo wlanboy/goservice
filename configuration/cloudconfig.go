@@ -14,10 +14,13 @@ type PropertySources struct {
 
 /*Source struct*/
 type Source struct {
-	DbName string `json:"db_name"`
-	DbUser string `json:"db_user"`
-	DbPass string `json:"db_pass"`
-	DbType string `json:"db_type"`
-	DbHost string `json:"db_host"`
-	DbPort string `json:"db_port"`
+	DbName      string `json:"db_name"`
+	DbUser      string `json:"db_user"`
+	DbPass      string `json:"db_pass"`
+	DbType      string `json:"db_type"`
+	DbHost      string `json:"db_host"`
+	DbPort      string `json:"db_port"`
+	Realm       string `json:"realm"`
+	RealmUser   string `json:"realm_user"`
+	RealmSecret string `json:"realm_secret"`
 }
