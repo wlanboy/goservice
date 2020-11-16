@@ -19,12 +19,15 @@ import (
 
 /*ConfigParameters for App*/
 type ConfigParameters struct {
-	DbName string
-	DbUser string
-	DbPass string
-	DbType string
-	DbHost string
-	DbPort string
+	DbName      string
+	DbUser      string
+	DbPass      string
+	DbType      string
+	DbHost      string
+	DbPort      string
+	Realm       string
+	RealmUser   string
+	RealmSecret string
 }
 
 /*GoService containing router and database*/
