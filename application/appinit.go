@@ -22,6 +22,7 @@ func (goservice *GoService) Initialize() {
 	goservice.Router.HandleFunc("/api/v1/event/{id}", goservice.GetByID).Methods("GET")
 
 	goservice.Router.Use(loggingMiddleware)
+	goservice.Router.Use(goservice.authMiddleware)
 
 	var appconfig ConfigParameters = handleConfiguration()
 	goservice.Config = &appconfig
@@ -43,6 +44,9 @@ func handleConfiguration() ConfigParameters {
 		appconfig.DbHost = os.Getenv("db_host")
 		appconfig.DbPort = os.Getenv("db_port")
 		appconfig.DbType = os.Getenv("db_type")
+		appconfig.Realm = os.Getenv("realm")
+		appconfig.RealmUser = os.Getenv("realm_user")
+		appconfig.RealmSecret = os.Getenv("realm_secret")
 	} else {
 		var cloudconfig configuration.CloudConfig
 		cloudconfig = configuration.LoadCloudConfig()
@@ -53,6 +57,9 @@ func handleConfiguration() ConfigParameters {
 		appconfig.DbHost = cloudconfig.PropertySources[0].Source.DbHost
 		appconfig.DbPort = cloudconfig.PropertySources[0].Source.DbPort
 		appconfig.DbType = cloudconfig.PropertySources[0].Source.DbType
+		appconfig.Realm = cloudconfig.PropertySources[0].Source.Realm
+		appconfig.RealmUser = cloudconfig.PropertySources[0].Source.RealmUser
+		appconfig.RealmSecret = cloudconfig.PropertySources[0].Source.RealmSecret
 	}
 
 	return appconfig
