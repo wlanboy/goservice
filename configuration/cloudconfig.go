@@ -23,4 +23,5 @@ type Source struct {
 	Realm       string `json:"realm"`
 	RealmUser   string `json:"realm_user"`
 	RealmSecret string `json:"realm_secret"`
+	HTTPPort    string `json:"http_port"`
 }

@@ -17,19 +17,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
-/*ConfigParameters for App*/
-type ConfigParameters struct {
-	DbName      string
-	DbUser      string
-	DbPass      string
-	DbType      string
-	DbHost      string
-	DbPort      string
-	Realm       string
-	RealmUser   string
-	RealmSecret string
-}
-
 /*GoService containing router and database*/
 type GoService struct {
 	Router *mux.Router
@@ -47,6 +34,7 @@ func (goservice *GoService) Run() {
 	dbHost := goservice.Config.DbHost
 	dbPort := goservice.Config.DbPort
 	dbType := goservice.Config.DbType
+	httpport := goservice.Config.HTTPPort
 
 	var conn *gorm.DB
 	var err error
@@ -66,15 +54,14 @@ func (goservice *GoService) Run() {
 	goservice.DB.Debug().AutoMigrate(&model.Event{})
 
 	//load http server
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8000"
+	if httpport == "" {
+		httpport = "8000"
 	}
-	fmt.Println(port)
+	fmt.Println(httpport)
 
 	goservice.Server = &http.Server{
 		Handler:      goservice.Router,
-		Addr:         fmt.Sprintf(":%s", port),
+		Addr:         fmt.Sprintf(":%s", httpport),
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
