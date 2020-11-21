@@ -26,15 +26,12 @@ func (goservice *GoService) authMiddleware(next http.Handler) http.Handler {
 
 /*checkRealmAuthError*/
 func checkRealmAuthError(user, secret, realm, userhash, secrethash string) bool {
-	generateduserhash, _ := bcrypt.GenerateFromPassword([]byte(user), bcrypt.MinCost)
-	generatedsecrethash, _ := bcrypt.GenerateFromPassword([]byte(secret), bcrypt.MinCost)
-
-	erru := bcrypt.CompareHashAndPassword([]byte(generateduserhash), []byte(userhash))
+	erru := bcrypt.CompareHashAndPassword([]byte(userhash), []byte(user))
 	if erru != nil {
 		log.Println(erru)
 		return true
 	}
-	erra := bcrypt.CompareHashAndPassword([]byte(generatedsecrethash), []byte(secrethash))
+	erra := bcrypt.CompareHashAndPassword([]byte(secrethash), []byte(secret))
 	if erra != nil {
 		log.Println(erra)
 		return true

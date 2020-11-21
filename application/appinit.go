@@ -2,16 +2,16 @@ package application
 
 import (
 	"log"
-	"os"
 
 	configuration "../configuration"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/tkanos/gonfig"
 )
 
 /*ConfigParameters for App*/
 type ConfigParameters struct {
+	CloudConfig string
 	DbName      string
 	DbUser      string
 	DbPass      string
@@ -45,24 +45,13 @@ func (goservice *GoService) Initialize() {
 func handleConfiguration() ConfigParameters {
 	var appconfig ConfigParameters
 
-	err := godotenv.Load()
+	err := gonfig.GetConf("config.json", &appconfig)
 	if err != nil {
 		log.Fatal(".env file missing")
 	}
-	cloudconfigenabled := os.Getenv("cloudconfigenabled")
+	cloudconfigenabled := appconfig.CloudConfig
 
-	if cloudconfigenabled == "false" {
-		appconfig.DbUser = os.Getenv("db_user")
-		appconfig.DbPass = os.Getenv("db_pass")
-		appconfig.DbName = os.Getenv("db_name")
-		appconfig.DbHost = os.Getenv("db_host")
-		appconfig.DbPort = os.Getenv("db_port")
-		appconfig.DbType = os.Getenv("db_type")
-		appconfig.Realm = os.Getenv("realm")
-		appconfig.RealmUser = os.Getenv("realm_user")
-		appconfig.RealmSecret = os.Getenv("realm_secret")
-		appconfig.HTTPPort = os.Getenv("http_port")
-	} else {
+	if cloudconfigenabled == "true" {
 		var cloudconfig configuration.CloudConfig
 		cloudconfig = configuration.LoadCloudConfig()
 

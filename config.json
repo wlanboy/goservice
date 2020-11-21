@@ -1,0 +1,9 @@
+{
+    "CloudConfig": false,
+    "DbName": "goevent.db",
+    "DbType": "sqlite3",
+    "Realm": "goservice",
+    "RealmUser": "$2a$04$7u5ACR9HSV5hFtphSq4V2ObiFyDoIdg7jBoYu4ZTnZf8Q4HPhrphe",
+    "RealmSecret": "$2a$04$rM2FCWRPegv96kC5ORzWaO6odfhXUeeFZoeqDb1LHc2a5wZN0AxyC",
+    "HTTPPort":  8000
+}
