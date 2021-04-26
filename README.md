@@ -60,6 +60,62 @@ Golang Rest service based on gorilla, gorm using Spring cloud config and Postgre
 
 # Kubernets deployment
 
+## Prepare
+```
+cd ~
+git clone https://github.com/wlanboy/goservice.git
+```
+
+## check you local kubectl
+```
+kubectl cluster-info
+kubectl get pods --all-namespaces
+```
+
+## deploy service on new namespace
+```
+cd ~/goservice
+kubectl create namespace go
+kubectl apply -f goservice-deployment.yaml
+kubectl apply -f goservice-service.yaml
+kubectl get pods -n go -o wide
+```
+
+## check deployment and service
+```
+kubectl describe deployments -n go goservice 
+kubectl describe services -n gp goservice-service
+```
+
+## expose service and get node port
+```
+kubectl expose deployment -n go goservice --type=NodePort --name=goservice-serviceexternal --port 8000
+kubectl describe services -n go goservice-serviceexternal 
+```
+Result:
+```
+Name:                     goservice-serviceexternal
+Namespace:                go
+Labels:                   app=goservice
+Annotations:              <none>
+Selector:                 app=goservice
+Type:                     NodePort
+IP Family Policy:         SingleStack
+IP Families:              IPv4
+IP:                       10.108.40.139
+IPs:                      10.108.40.139
+Port:                     <unset>  8000/TCP
+TargetPort:               8002/TCP
+NodePort:                 <unset>  30413/TCP  <--- THIS IS THE PORT WE NEED
+Endpoints:                10.10.0.8:8000
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+```
+
+##  call microservice
+* curl http://192.168.56.100:30413/api/v1/event 
+
 # create event
 * curl -X POST http://127.0.0.1:8000/api/v1/event -H 'Content-Type: application/json' -d '{"name": "test", "type": "info"}'
 # get all events
