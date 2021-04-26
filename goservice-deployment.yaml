@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: goservice
+  name: goservice
+  namespace: go
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goservice
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: goservice
+    spec:
+      containers:
+      - image: wlanboy/goservice
+        name: goservice
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        resources: {}
+status: {}
