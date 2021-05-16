@@ -52,6 +52,9 @@ Golang Rest service based on gorilla, gorm using Spring cloud config and Postgre
 - docker tag goservice:latest docker.pkg.github.com/wlanboy/goservice/goservice:latest
 - docker push docker.pkg.github.com/wlanboy/goservice/goservice:latest
 
+## Docker Hub
+- https://hub.docker.com/r/wlanboy/goservice
+
 ## Docker Registry repro
 - https://github.com/wlanboy/goservice/packages/278503
 
