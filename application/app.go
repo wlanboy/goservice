@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	model "../model"
+	model "github.com/wlanboy/goservice/v2/model"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"

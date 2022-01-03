@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	model "../model"
+	model "github.com/wlanboy/goservice/v2/model"
 )
 
 /*WriteJSONErrorResponse with content type and status code*/

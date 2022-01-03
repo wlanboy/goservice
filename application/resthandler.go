@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	model "../model"
+	model "github.com/wlanboy/goservice/v2/model"
 	"github.com/gorilla/mux"
 	uuid "github.com/satori/go.uuid"
 )

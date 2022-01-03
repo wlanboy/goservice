@@ -3,7 +3,7 @@ package application
 import (
 	"log"
 
-	configuration "../configuration"
+	configuration "github.com/wlanboy/goservice/v2/configuration"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/tkanos/gonfig"

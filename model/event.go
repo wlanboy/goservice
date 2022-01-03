@@ -40,12 +40,8 @@ func SaveEvent(event Event, db *gorm.DB) (string, *Event) {
 	if error, ok := event.Validate(); !ok {
 		return error, nil
 	} else {
-		uuid, err := uuid.NewV4()
-		if err != nil {
-			fmt.Printf("uuid.NewV4 went wrong: %s", err)
-		} else {
-			event.UUID = uuid
-		}
+		uuid := uuid.NewV4()
+		event.UUID = uuid
 		inserterr := db.Create(&event).Error
 		if inserterr != nil {
 			return fmt.Sprintf("Event cannot be saved %s", inserterr), nil
