@@ -2,11 +2,12 @@ package application
 
 import (
 	"log"
+	"net/http"
 
-	configuration "github.com/wlanboy/goservice/v2/configuration"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/tkanos/gonfig"
+	configuration "github.com/wlanboy/goservice/v2/configuration"
 )
 
 /*ConfigParameters for App*/
@@ -34,6 +35,8 @@ func (goservice *GoService) Initialize() {
 	goservice.Router.HandleFunc("/api/v1/event", goservice.PostCreate).Methods("POST")
 	goservice.Router.HandleFunc("/api/v1/event", goservice.GetAll).Methods("GET")
 	goservice.Router.HandleFunc("/api/v1/event/{id}", goservice.GetByID).Methods("GET")
+
+	goservice.Router.PathPrefix("/debug/").Handler(http.DefaultServeMux)
 
 	goservice.Router.Use(loggingMiddleware)
 	goservice.Router.Use(goservice.authMiddleware)
