@@ -8,7 +8,7 @@ WORKDIR /app
 RUN go get -d -v
 RUN go build -v -o main .
 
-FROM alpine:3.17
+FROM alpine:3
 RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 COPY --from=builder /app/main .
