@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine3.19 as builder
+FROM golang:1.22-alpine3.19 as builder
 RUN apk add --no-cache git
 RUN apk add --no-cache sqlite-libs sqlite-dev
 RUN apk add --no-cache build-base
