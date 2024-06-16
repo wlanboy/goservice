@@ -13,7 +13,7 @@ func (goservice *GoService) healthCheckHandler(w http.ResponseWriter, r *http.Re
 
 	message := "up"
 	currentdatabase := ""
-	if err := goservice.DB.Exec("SELECT current_database();").Error; err != nil {
+	if err := goservice.DB.Exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';").Error; err != nil {
 		message = "down"
 		log.Print(err)
 	}
