@@ -1,0 +1,21 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    release: prom-stack
+  name: golang
+spec:
+  endpoints:
+  - path: /metrics
+    port: http-actuator-metrics
+    scheme: http
+    interval: 60s
+
+  jobLabel: golang
+  namespaceSelector:
+    matchNames:
+    - default
+  selector:
+    matchLabels:
+      app: golang
