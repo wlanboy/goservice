@@ -36,10 +36,13 @@ func (goservice *GoService) Initialize() {
 	goservice.Router.HandleFunc("/api/v1/event", goservice.GetAll).Methods("GET")
 	goservice.Router.HandleFunc("/api/v1/event/{id}", goservice.GetByID).Methods("GET")
 
+	goservice.Router.HandleFunc("/long", goservice.GetLong).Methods("GET")
+
 	goservice.Router.PathPrefix("/debug/").Handler(http.DefaultServeMux)
 
 	goservice.Router.Use(loggingMiddleware)
 	goservice.Router.Use(goservice.authMiddleware)
+	goservice.Router.Use(goservice.metricsMiddleware)
 
 	var appconfig ConfigParameters = handleConfiguration()
 	goservice.Config = &appconfig
@@ -55,8 +58,7 @@ func handleConfiguration() ConfigParameters {
 	cloudconfigenabled := appconfig.CloudConfig
 
 	if cloudconfigenabled == "true" {
-		var cloudconfig configuration.CloudConfig
-		cloudconfig = configuration.LoadCloudConfig()
+		var cloudconfig configuration.CloudConfig = configuration.LoadCloudConfig()
 
 		appconfig.DbUser = cloudconfig.PropertySources[0].Source.DbUser
 		appconfig.DbPass = cloudconfig.PropertySources[0].Source.DbPass
