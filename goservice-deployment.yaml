@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     app: goservice
   name: goservice
@@ -14,7 +13,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
         app: goservice
     spec:
@@ -24,5 +22,11 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8000
-        resources: {}
+        resources:
+          limits:
+            cpu: "1"
+            memory: "256Mi"
+          requests:
+            cpu: "0.5"
+            memory: "128Mi"
 status: {}
