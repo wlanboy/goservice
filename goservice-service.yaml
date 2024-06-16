@@ -3,7 +3,7 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    app: goservice-service
+    app: golang
   name: goservice-service
   namespace: go
 spec:
