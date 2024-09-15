@@ -9,10 +9,10 @@ jobs:
     steps:
 
     - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       
     - name: Build and publish Docker Image to GitHub Packages Registry
-      uses: VaultVulp/gp-docker-action@1.1.7
+      uses: VaultVulp/gp-docker-action@1.6.0
       with:
         github-token: ${{ github.token }}
         image-name: goservice
